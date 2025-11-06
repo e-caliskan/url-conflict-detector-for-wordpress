@@ -1,0 +1,181 @@
+# Copyright (C) 2024 URL Conflict Detector
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: URL Conflict Detector 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/e-caliskan/url-conflict-detector-for-wordpress/issues\n"
+"POT-Creation-Date: 2024-01-01 00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Your Name <your.email@example.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: url-conflict-detector.php:76
+#: url-conflict-detector.php:77
+msgid "URL Conflicts"
+msgstr ""
+
+#: url-conflict-detector.php:117
+msgid "All Content Types"
+msgstr ""
+
+#: url-conflict-detector.php:118
+msgid "All Taxonomies"
+msgstr ""
+
+#: url-conflict-detector.php:119
+msgid "Please select at least one scan option."
+msgstr ""
+
+#: url-conflict-detector.php:120
+msgid "Error"
+msgstr ""
+
+#: url-conflict-detector.php:121
+msgid "An error occurred during scanning."
+msgstr ""
+
+#: url-conflict-detector.php:122
+msgid "Great! No conflicts found."
+msgstr ""
+
+#: url-conflict-detector.php:123
+msgid "Resolved"
+msgstr ""
+
+#: url-conflict-detector.php:124
+msgid "Pending"
+msgstr ""
+
+#: url-conflict-detector.php:125
+msgid "Fix"
+msgstr ""
+
+#: url-conflict-detector.php:126
+msgid "Fixed"
+msgstr ""
+
+#: url-conflict-detector.php:127
+msgid "Conflicting URL"
+msgstr ""
+
+#: url-conflict-detector.php:128
+msgid "New Slug"
+msgstr ""
+
+#: url-conflict-detector.php:129
+msgid "Update This Item"
+msgstr ""
+
+#: url-conflict-detector.php:130
+msgid "Cancel"
+msgstr ""
+
+#: url-conflict-detector.php:131
+msgid "Please enter a valid slug."
+msgstr ""
+
+#: url-conflict-detector.php:132
+msgid "Updating..."
+msgstr ""
+
+#: url-conflict-detector.php:133
+msgid "Slug successfully updated!"
+msgstr ""
+
+#: url-conflict-detector.php:134
+msgid "An error occurred."
+msgstr ""
+
+#: url-conflict-detector.php:789
+msgid "URL Conflict Detection and Resolution"
+msgstr ""
+
+#: url-conflict-detector.php:792
+msgid "Select Items to Scan"
+msgstr ""
+
+#: url-conflict-detector.php:794
+msgid "Loading options..."
+msgstr ""
+
+#: url-conflict-detector.php:800
+msgid "Scan for Conflicts"
+msgstr ""
+
+#: url-conflict-detector.php:806
+msgid "Scanning..."
+msgstr ""
+
+#: url-conflict-detector.php:814
+msgid "Total Conflicts"
+msgstr ""
+
+#: url-conflict-detector.php:818
+msgid "Pending"
+msgstr ""
+
+#: url-conflict-detector.php:822
+msgid "Resolved"
+msgstr ""
+
+#: url-conflict-detector.php:828
+msgid "Detected Conflicts"
+msgstr ""
+
+#: url-conflict-detector.php:832
+msgid "URL"
+msgstr ""
+
+#: url-conflict-detector.php:833
+msgid "First Item"
+msgstr ""
+
+#: url-conflict-detector.php:834
+msgid "Second Item"
+msgstr ""
+
+#: url-conflict-detector.php:835
+msgid "Status"
+msgstr ""
+
+#: url-conflict-detector.php:836
+msgid "Actions"
+msgstr ""
+
+#: url-conflict-detector.php:842
+msgid "Select items from above and click \"Scan for Conflicts\" button to start scanning."
+msgstr ""
+
+#: url-conflict-detector.php:854
+msgid "Fix Conflict"
+msgstr ""
+
+#: url-conflict-detector.php:865
+#: url-conflict-detector.php:935
+#: url-conflict-detector.php:1129
+#: url-conflict-detector.php:1148
+msgid "You do not have permission."
+msgstr ""
+
+#: url-conflict-detector.php:905
+msgid "Media"
+msgstr ""
+
+#: url-conflict-detector.php:941
+msgid "Please select items to scan."
+msgstr ""
+
+#: url-conflict-detector.php:1138
+msgid "Conflict not found."
+msgstr ""
+
+#: url-conflict-detector.php:1191
+msgid "Slug successfully updated."
+msgstr ""
+
+#: url-conflict-detector.php:1193
+msgid "An error occurred while updating slug."
+msgstr ""
