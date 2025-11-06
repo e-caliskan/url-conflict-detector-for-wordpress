@@ -9,7 +9,6 @@
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: url-conflict-detector
- * Domain Path: /languages
  * Requires at least: 5.0
  * Requires PHP: 7.4
  */
@@ -32,14 +31,9 @@ class URL_Conflict_Detector {
         add_action('wp_ajax_fix_conflict', array($this, 'ajax_fix_conflict'));
         add_action('wp_ajax_get_conflict_details', array($this, 'ajax_get_conflict_details'));
         add_action('wp_ajax_get_available_types', array($this, 'ajax_get_available_types'));
-        add_action('plugins_loaded', array($this, 'load_textdomain'));
         
         register_activation_hook(__FILE__, array($this, 'activate'));
         register_deactivation_hook(__FILE__, array($this, 'deactivate'));
-    }
-    
-    public function load_textdomain() {
-        load_plugin_textdomain('url-conflict-detector', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
     
     public function activate() {
@@ -287,7 +281,7 @@ class URL_Conflict_Detector {
             wp_send_json_error(__('You do not have permission.', 'url-conflict-detector'));
         }
         
-        $scan_types = isset($_POST['scan_types']) ? $_POST['scan_types'] : array();
+        $scan_types = isset($_POST['scan_types']) ? array_map('sanitize_text_field', wp_unslash($_POST['scan_types'])) : array();
         
         if (empty($scan_types)) {
             wp_send_json_error(__('Please select items to scan.', 'url-conflict-detector'));
@@ -296,7 +290,8 @@ class URL_Conflict_Detector {
         global $wpdb;
         
         // First clear existing records
-        $wpdb->query("TRUNCATE TABLE {$this->table_name}");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $wpdb->query("TRUNCATE TABLE `" . esc_sql($this->table_name) . "`");
         
         $conflicts = array();
         $urls = array();
@@ -318,6 +313,7 @@ class URL_Conflict_Detector {
             if (count($items_list) > 1) {
                 for ($i = 0; $i < count($items_list); $i++) {
                     for ($j = $i + 1; $j < count($items_list); $j++) {
+                        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                         $wpdb->insert(
                             $this->table_name,
                             array(
@@ -376,11 +372,12 @@ class URL_Conflict_Detector {
             }
             // Special media check
             elseif ($type === 'media') {
-                $attachments = $wpdb->get_results("
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $attachments = $wpdb->get_results($wpdb->prepare("
                     SELECT ID, post_title, post_name 
                     FROM {$wpdb->posts} 
-                    WHERE post_type = 'attachment'
-                ");
+                    WHERE post_type = %s
+                ", 'attachment'));
                 
                 foreach ($attachments as $attachment) {
                     $full_url = $this->get_full_permalink($attachment->ID, 'media');
@@ -394,6 +391,7 @@ class URL_Conflict_Detector {
             }
             // Post Type
             else {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $posts = $wpdb->get_results($wpdb->prepare("
                     SELECT ID, post_title, post_name 
                     FROM {$wpdb->posts} 
@@ -455,7 +453,8 @@ class URL_Conflict_Detector {
     private function get_conflicts_for_display() {
         global $wpdb;
         
-        $conflicts = $wpdb->get_results("SELECT * FROM {$this->table_name} ORDER BY scan_date DESC", ARRAY_A);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $conflicts = $wpdb->get_results("SELECT * FROM `" . esc_sql($this->table_name) . "` ORDER BY scan_date DESC", ARRAY_A);
         
         return $conflicts;
     }
@@ -463,9 +462,12 @@ class URL_Conflict_Detector {
     private function get_conflict_stats() {
         global $wpdb;
         
-        $total = $wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name}");
-        $pending = $wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name} WHERE status = 'pending'");
-        $resolved = $wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name} WHERE status = 'resolved'");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $total = $wpdb->get_var("SELECT COUNT(*) FROM `" . esc_sql($this->table_name) . "`");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $pending = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM `" . esc_sql($this->table_name) . "` WHERE status = %s", 'pending'));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $resolved = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM `" . esc_sql($this->table_name) . "` WHERE status = %s", 'resolved'));
         
         return array(
             'total' => intval($total),
@@ -478,13 +480,14 @@ class URL_Conflict_Detector {
         check_ajax_referer('url_conflict_detector_nonce', 'nonce');
         
         if (!current_user_can('manage_options')) {
-            wp_send_json_error('Yetkiniz yok.');
+            wp_send_json_error(__('You do not have permission.', 'url-conflict-detector'));
         }
         
-        $conflict_id = intval($_POST['conflict_id']);
+        $conflict_id = isset($_POST['conflict_id']) ? intval($_POST['conflict_id']) : 0;
         
         global $wpdb;
-        $conflict = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$this->table_name} WHERE id = %d", $conflict_id), ARRAY_A);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $conflict = $wpdb->get_row($wpdb->prepare("SELECT * FROM `" . esc_sql($this->table_name) . "` WHERE id = %d", $conflict_id), ARRAY_A);
         
         if (!$conflict) {
             wp_send_json_error(__('Conflict not found.', 'url-conflict-detector'));
@@ -500,10 +503,10 @@ class URL_Conflict_Detector {
             wp_send_json_error(__('You do not have permission.', 'url-conflict-detector'));
         }
         
-        $conflict_id = intval($_POST['conflict_id']);
-        $item_type = sanitize_text_field($_POST['item_type']);
-        $item_id = intval($_POST['item_id']);
-        $new_slug = sanitize_title($_POST['new_slug']);
+        $conflict_id = isset($_POST['conflict_id']) ? intval($_POST['conflict_id']) : 0;
+        $item_type = isset($_POST['item_type']) ? sanitize_text_field(wp_unslash($_POST['item_type'])) : '';
+        $item_id = isset($_POST['item_id']) ? intval($_POST['item_id']) : 0;
+        $new_slug = isset($_POST['new_slug']) ? sanitize_title(wp_unslash($_POST['new_slug'])) : '';
         
         global $wpdb;
         
@@ -532,6 +535,7 @@ class URL_Conflict_Detector {
         
         if ($result && !is_wp_error($result)) {
             // Mark conflict as resolved
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->update(
                 $this->table_name,
                 array('status' => 'resolved'),

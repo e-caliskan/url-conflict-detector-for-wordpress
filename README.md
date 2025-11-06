@@ -139,16 +139,9 @@ A: The plugin doesn't have a built-in undo feature, but you can manually change 
 
 For bug reports, feature requests, or support questions:
 - Open an issue on [GitHub](https://github.com/e-caliskan/url-conflict-detector-for-wordpress/issues)
-- Visit our [support forum](https://wordpress.org/support/plugin/url-conflict-detector/)
 
-## Contributing
 
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+
 
 ## Changelog
 
@@ -165,7 +158,7 @@ Contributions are welcome! Please:
 This plugin is licensed under the GPL v2 or later.
 
 ```
-Copyright (C) 2024 Your Name
+Copyright (C) 2024 Emrah ÇALIŞKAN
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -180,7 +173,7 @@ GNU General Public License for more details.
 
 ## Credits
 
-Developed by [Your Name](https://yourwebsite.com)
+Developed by [Emrah ÇALIŞKAN](https://emrahcaliskan.tr)
 
 ---
 

@@ -13,11 +13,12 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 
 global $wpdb;
 
-// Define table name
+// Define table name with safe escaping
 $table_name = $wpdb->prefix . 'url_conflicts';
 
 // Drop the conflicts table
-$wpdb->query("DROP TABLE IF EXISTS {$table_name}");
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+$wpdb->query("DROP TABLE IF EXISTS `" . esc_sql($table_name) . "`");
 
 // Clean up any options if they exist (currently plugin doesn't use options, but good practice)
 delete_option('url_conflict_detector_version');
@@ -25,12 +26,14 @@ delete_option('url_conflict_detector_settings');
 
 // For multisite installations
 if (is_multisite()) {
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $blog_ids = $wpdb->get_col("SELECT blog_id FROM {$wpdb->blogs}");
     foreach ($blog_ids as $blog_id) {
         switch_to_blog($blog_id);
         
         $table_name = $wpdb->prefix . 'url_conflicts';
-        $wpdb->query("DROP TABLE IF EXISTS {$table_name}");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $wpdb->query("DROP TABLE IF EXISTS `" . esc_sql($table_name) . "`");
         
         delete_option('url_conflict_detector_version');
         delete_option('url_conflict_detector_settings');
